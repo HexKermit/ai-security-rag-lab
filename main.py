@@ -1,17 +1,25 @@
+from difflib import SequenceMatcher
+
+
 def load_vulnerabilities(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
-        return file.readlines()
+        return [line.strip() for line in file.readlines() if line.strip()]
 
 
-def search_vulnerabilities(query, vulnerabilities):
-    query = query.lower().strip()
-    results = []
+def similarity(a, b):
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+
+
+def search_vulnerabilities(query, vulnerabilities, threshold=0.2):
+    scored_results = []
 
     for vuln in vulnerabilities:
-        if query in vuln.lower():
-            results.append(vuln.strip())
+        score = similarity(query, vuln)
+        if score >= threshold:
+            scored_results.append((score, vuln))
 
-    return results
+    scored_results.sort(reverse=True, key=lambda x: x[0])
+    return scored_results[:3]
 
 
 def main():
@@ -19,16 +27,16 @@ def main():
     vulnerabilities = load_vulnerabilities(file_path)
 
     print("AI Security RAG Lab")
-    user_query = input("Search vulnerability: ")
+    user_query = input("Search vulnerability: ").strip()
 
     results = search_vulnerabilities(user_query, vulnerabilities)
 
     if results:
-        print("\nResults:")
-        for result in results:
-            print(f"- {result}")
+        print("\nTop Results:")
+        for score, result in results:
+            print(f"- ({score:.2f}) {result}")
     else:
-        print("\nNo matching vulnerabilities found.")
+        print("\nNo similar vulnerabilities found.")
 
 
 if __name__ == "__main__":
