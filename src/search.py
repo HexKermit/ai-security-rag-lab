@@ -1,5 +1,11 @@
+import re
+
+
 def normalize_text(text):
-    return text.lower().strip()
+    text = text.lower().strip()
+    text = re.sub(r"[^a-z0-9\s]", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text
 
 
 def token_overlap_score(query, text):
