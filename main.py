@@ -1,29 +1,59 @@
-from difflib import SequenceMatcher
+import json
 
 
 def load_vulnerabilities(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
-        return [line.strip() for line in file.readlines() if line.strip()]
+        return json.load(file)
 
 
-def similarity(a, b):
-    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+def normalize_text(text):
+    return text.lower().strip()
 
 
-def search_vulnerabilities(query, vulnerabilities, threshold=0.2):
-    scored_results = []
+def token_overlap_score(query, text):
+    query_tokens = set(normalize_text(query).split())
+    text_tokens = set(normalize_text(text).split())
+
+    if not query_tokens or not text_tokens:
+        return 0
+
+    overlap = query_tokens.intersection(text_tokens)
+    return len(overlap) / len(query_tokens)
+
+
+def search_vulnerabilities(query, vulnerabilities):
+    query = normalize_text(query)
+    results = []
 
     for vuln in vulnerabilities:
-        score = similarity(query, vuln)
-        if score >= threshold:
-            scored_results.append((score, vuln))
+        name = vuln["name"]
+        aliases = vuln["aliases"]
+        description = vuln["description"]
 
-    scored_results.sort(reverse=True, key=lambda x: x[0])
-    return scored_results[:3]
+        searchable_text = " ".join([name] + aliases + [description]).lower()
+
+        score = 0
+
+        # Exact alias match
+        if query in aliases:
+            score += 3
+
+        # Exact text containment
+        if query in searchable_text:
+            score += 2
+
+        # Token overlap
+        score += token_overlap_score(query, searchable_text)
+
+        if score > 0:
+            results.append((score, vuln))
+
+    results.sort(reverse=True, key=lambda x: x[0])
+    return results[:3]
 
 
 def main():
-    file_path = "data/vulns.txt"
+    file_path = "data/vulns.json"
     vulnerabilities = load_vulnerabilities(file_path)
 
     print("AI Security RAG Lab")
@@ -33,10 +63,10 @@ def main():
 
     if results:
         print("\nTop Results:")
-        for score, result in results:
-            print(f"- ({score:.2f}) {result}")
+        for score, vuln in results:
+            print(f"- ({score:.2f}) {vuln['name']}: {vuln['description']}")
     else:
-        print("\nNo similar vulnerabilities found.")
+        print("\nNo matching vulnerabilities found.")
 
 
 if __name__ == "__main__":

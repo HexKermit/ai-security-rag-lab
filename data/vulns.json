@@ -1,0 +1,27 @@
+[
+  {
+    "name": "SQL Injection",
+    "aliases": ["sql injection", "sqli"],
+    "description": "A vulnerability that allows attackers to interfere with database queries."
+  },
+  {
+    "name": "Cross-Site Scripting",
+    "aliases": ["xss", "cross site scripting", "javascript injection"],
+    "description": "A vulnerability that allows attackers to inject malicious JavaScript into web pages."
+  },
+  {
+    "name": "Server-Side Request Forgery",
+    "aliases": ["ssrf", "server side request forgery"],
+    "description": "A vulnerability where the server makes unintended requests on behalf of the attacker."
+  },
+  {
+    "name": "Remote Code Execution",
+    "aliases": ["rce", "remote code execution"],
+    "description": "A vulnerability that allows attackers to execute arbitrary code on the server."
+  },
+  {
+    "name": "Broken Access Control",
+    "aliases": ["broken access control", "unauthorized access", "access control"],
+    "description": "A vulnerability that allows unauthorized users to access restricted resources."
+  }
+]
