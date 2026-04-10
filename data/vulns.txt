@@ -1,0 +1,5 @@
+SQL Injection: A vulnerability that allows attackers to interfere with database queries.
+Cross-Site Scripting (XSS): A vulnerability that allows attackers to inject malicious JavaScript into web pages.
+Server-Side Request Forgery (SSRF): A vulnerability where the server makes unintended requests on behalf of the attacker.
+Remote Code Execution (RCE): A vulnerability that allows attackers to execute arbitrary code on the server.
+Broken Access Control: A vulnerability that allows unauthorized users to access restricted resources.
