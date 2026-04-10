@@ -1,5 +1,5 @@
 from src.loader import load_vulnerabilities
-from src.search import search_vulnerabilities
+from src.semantic_search import semantic_search
 
 
 def main():
@@ -9,12 +9,12 @@ def main():
     print("AI Security RAG Lab")
     user_query = input("Search vulnerability: ").strip()
 
-    results = search_vulnerabilities(user_query, vulnerabilities)
+    results = semantic_search(user_query, vulnerabilities)
 
     if results:
         print("\nTop Results:")
         for score, vuln in results:
-            print(f"- ({score:.2f}) {vuln['name']}: {vuln['description']}")
+            print(f"- ({score:.4f}) {vuln['name']}: {vuln['description']}")
     else:
         print("\nNo matching vulnerabilities found.")
 
