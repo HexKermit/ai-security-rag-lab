@@ -1,6 +1,6 @@
 from src.loader import load_vulnerabilities
-from src.search import lexical_score
-from src.semantic_search import semantic_scores
+from src.search import lexical_score, normalize_text
+from src.semantic_search import semantic_scores, prepare_documents
 
 
 def format_answer(query, results):
@@ -25,16 +25,21 @@ def main():
     file_path = "data/vulns.json"
     vulnerabilities = load_vulnerabilities(file_path)
 
-    print("AI Security RAG Lab")
-    user_query = input("Search vulnerability: ").strip()
+    _, doc_embeddings = prepare_documents(vulnerabilities)
 
-    semantic = semantic_scores(user_query, vulnerabilities)
+    print("AI Security RAG Lab")
+    raw_query = input("Search vulnerability: ").strip()
+    user_query = normalize_text(raw_query)
+
+    print(f"\n[DEBUG] Raw input: {raw_query}")
+    print(f"[DEBUG] Normalized input: {user_query}")
+
+    semantic = semantic_scores(user_query, doc_embeddings)
 
     combined_results = []
     for i, vuln in enumerate(vulnerabilities):
         lex_score = lexical_score(user_query, vuln)
         sem_score = semantic[i]
-
         final_score = lex_score + sem_score
         combined_results.append((final_score, vuln))
 
