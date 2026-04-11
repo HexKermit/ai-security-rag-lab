@@ -1,22 +1,23 @@
-def generate_answer(query, top_vuln):
-    name = top_vuln["name"]
-    type_ = top_vuln.get("type", "unknown")
-    description = top_vuln["description"]
-    mitigation = top_vuln.get("mitigation", "No mitigation available.")
-    aliases = ", ".join(top_vuln["aliases"])
+def generate_answer(query, top_result):
+    name = top_result["name"]
+    type_ = top_result.get("type", "unknown")
+    description = top_result["description"]
+    mitigation = top_result.get("mitigation", "No mitigation available.")
+    aliases = ", ".join(top_result.get("aliases", []))
 
     answer = []
 
-    answer.append(f"\nAI Security Insight for '{query}':\n")
+    answer.append(f"AI Security Insight for '{query}':")
+    answer.append("")
     answer.append(f"{name} is the most relevant result for your query.")
-
-    answer.append("\nType:")
+    answer.append("")
+    answer.append("Type:")
     answer.append(type_)
-
-    answer.append("\nWhat it is:")
+    answer.append("")
+    answer.append("What it is:")
     answer.append(description)
-
-    answer.append("\nWhy it matters:")
+    answer.append("")
+    answer.append("Why it matters:")
 
     if type_ == "vulnerability":
         answer.append(
@@ -24,25 +25,26 @@ def generate_answer(query, top_vuln):
         )
     elif type_ == "attack":
         answer.append(
-            "This attack pattern matters because it describes how an attacker can exploit weaknesses in a real-world offensive scenario."
+            "This attack pattern matters because it shows how attackers can exploit weaknesses in realistic offensive scenarios."
         )
     elif type_ == "technique":
         answer.append(
-            "This technique matters because it is used by security testers and researchers to discover weaknesses in systems and applications."
+            "This technique matters because security testers and researchers use it to discover weaknesses in applications and systems."
         )
     elif type_ == "topic":
         answer.append(
-            "This topic matters because it represents an important area of security knowledge that supports deeper understanding, testing, and defense."
+            "This topic matters because it represents an important area of security knowledge that supports stronger testing, analysis, and defense."
         )
     else:
         answer.append(
             "This result is security-relevant and may help explain the user's query."
         )
 
-    answer.append("\nCommon aliases:")
-    answer.append(aliases)
-
-    answer.append("\nBasic mitigation / handling:")
+    answer.append("")
+    answer.append("Common aliases:")
+    answer.append(aliases if aliases else "No aliases available.")
+    answer.append("")
+    answer.append("Basic mitigation / handling:")
     answer.append(mitigation)
 
     return "\n".join(answer)
