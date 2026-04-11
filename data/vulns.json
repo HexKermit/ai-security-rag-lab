@@ -82,5 +82,61 @@
     "aliases": ["retrieval injection", "rag prompt injection", "context injection"],
     "description": "A vulnerability where malicious content is injected into retrieved documents, influencing the AI system's response.",
     "mitigation": "Validate retrieved content, separate instructions from data, and apply trust boundaries on external sources."
+  },
+  {
+    "name": "Reverse Engineering",
+    "type": "topic",
+    "aliases": ["reverse engineering", "reversing", "binary analysis"],
+    "description": "The process of analyzing software, binaries, or systems to understand how they work internally.",
+    "mitigation": "Not applicable. This is a security topic rather than a vulnerability."
+  },
+  {
+    "name": "Exploit Development",
+    "type": "topic",
+    "aliases": ["exploit development", "exploit dev", "developing exploits"],
+    "description": "The process of creating reliable methods or code to take advantage of a vulnerability.",
+    "mitigation": "Not applicable. This is a security topic rather than a vulnerability."
+  },
+  {
+    "name": "Authentication Vulnerabilities",
+    "type": "topic",
+    "aliases": ["authentication vulnerabilities", "auth flaws", "broken authentication"],
+    "description": "A category of security weaknesses related to login, session handling, identity verification, or credential validation.",
+    "mitigation": "Use strong authentication design, secure session management, MFA, and robust credential handling."
+  },
+  {
+    "name": "API Testing",
+    "type": "technique",
+    "aliases": ["api testing", "api security testing", "testing apis"],
+    "description": "A security testing technique focused on analyzing API behavior, authorization, input handling, and business logic.",
+    "mitigation": "Not applicable. This is a testing technique rather than a vulnerability."
+  },
+  {
+    "name": "Fuzzing",
+    "type": "technique",
+    "aliases": ["fuzzing", "fuzzer testing", "input fuzzing"],
+    "description": "A testing technique that sends unexpected, malformed, or random input to a target in order to discover bugs or vulnerabilities.",
+    "mitigation": "Not applicable. This is a testing technique rather than a vulnerability."
+  },
+  {
+    "name": "Server-Side Request Forgery Attacks",
+    "type": "attack",
+    "aliases": ["ssrf attacks", "server-side request forgery attacks", "ssrf exploitation"],
+    "description": "An attack pattern where an attacker abuses a vulnerable server to make unintended network requests on their behalf.",
+    "mitigation": "Restrict outbound requests, validate destinations, and block access to internal network resources."
+  },
+  {
+    "name": "Web LLM Attacks",
+    "type": "attack",
+    "aliases": ["web llm attacks", "llm attacks", "browser llm attacks"],
+    "description": "A broad class of attacks targeting web applications that integrate large language models, often involving prompt manipulation, data leakage, or unsafe tool usage.",
+    "mitigation": "Use strong prompt isolation, output validation, permission boundaries, and careful handling of retrieved or user-controlled content."
+  },
+  {
+    "name": "OWASP Top 10",
+    "type": "topic",
+    "aliases": ["owasp top 10", "owasp top ten", "top web risks"],
+    "description": "A widely used awareness document that highlights the most important categories of web application security risks.",
+    "mitigation": "Use it as a framework for prioritizing security design, testing, and remediation efforts."
   }
 ]
