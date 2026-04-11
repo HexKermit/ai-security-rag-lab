@@ -28,5 +28,17 @@
     "aliases": ["broken access control", "unauthorized access", "access control"],
     "description": "A vulnerability that allows unauthorized users to access restricted resources.",
     "mitigation": "Enforce server-side authorization checks and apply least privilege."
+  },
+  {
+    "name": "Prompt Injection",
+    "aliases": ["prompt injection", "llm prompt injection", "jailbreak prompt"],
+    "description": "A vulnerability where an attacker manipulates an AI model through crafted instructions to bypass intended behavior or safety controls.",
+    "mitigation": "Use input filtering, instruction separation, output validation, and defense-in-depth prompt design."
+  },
+  {
+    "name": "Indirect Prompt Injection",
+    "aliases": ["indirect prompt injection", "remote prompt injection", "retrieved prompt injection"],
+    "description": "A vulnerability where malicious instructions are hidden in external content that an AI system later consumes and follows.",
+    "mitigation": "Treat external content as untrusted, isolate instructions from data, and validate model actions before execution."
   }
 ]

@@ -1,27 +1,9 @@
 from src.loader import load_vulnerabilities
 from src.search import lexical_score, normalize_text
 from src.semantic_search import semantic_scores, prepare_documents
+from src.answer_generator import generate_answer
 
 DEBUG = False
-
-
-def format_answer(query, results):
-    top_score, top_vuln = results[0]
-
-    answer = []
-    answer.append(f"\nBest Match for '{query}':")
-    answer.append(f"- Name: {top_vuln['name']}")
-    answer.append(f"- Description: {top_vuln['description']}")
-    answer.append(f"- Aliases: {', '.join(top_vuln['aliases'])}")
-    answer.append(f"- Mitigation: {top_vuln.get('mitigation', 'No mitigation available.')}")
-    answer.append(f"- Confidence Score: {top_score:.4f}")
-
-    if len(results) > 1:
-        answer.append("\nOther Possible Matches:")
-        for score, vuln in results[1:]:
-            answer.append(f"- {vuln['name']} ({score:.4f})")
-
-    return "\n".join(answer)
 
 
 def search_once(user_query, vulnerabilities, doc_embeddings):
@@ -64,7 +46,15 @@ def main():
             print(f"[DEBUG] Normalized input: {user_query}")
 
         results = search_once(user_query, vulnerabilities, doc_embeddings)
-        print(format_answer(user_query, results))
+        top_score, top_vuln = results[0]
+
+        print(generate_answer(user_query, top_vuln))
+        print(f"\nConfidence Score: {top_score:.4f}")
+
+        if len(results) > 1:
+            print("\nOther Possible Matches:")
+            for score, vuln in results[1:]:
+                print(f"- {vuln['name']} ({score:.4f})")
 
 
 if __name__ == "__main__":
