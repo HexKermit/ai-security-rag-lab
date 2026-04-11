@@ -2,26 +2,31 @@
   {
     "name": "SQL Injection",
     "aliases": ["sql injection", "sqli"],
-    "description": "A vulnerability that allows attackers to interfere with database queries."
+    "description": "A vulnerability that allows attackers to interfere with database queries.",
+    "mitigation": "Use parameterized queries, prepared statements, and input validation."
   },
   {
     "name": "Cross-Site Scripting",
     "aliases": ["xss", "cross site scripting", "javascript injection"],
-    "description": "A vulnerability that allows attackers to inject malicious JavaScript into web pages."
+    "description": "A vulnerability that allows attackers to inject malicious JavaScript into web pages.",
+    "mitigation": "Use output encoding, input validation, and Content Security Policy."
   },
   {
     "name": "Server-Side Request Forgery",
     "aliases": ["ssrf", "server side request forgery"],
-    "description": "A vulnerability where the server makes unintended requests on behalf of the attacker."
+    "description": "A vulnerability where the server makes unintended requests on behalf of the attacker.",
+    "mitigation": "Restrict outbound requests, validate destinations, and use allowlists."
   },
   {
     "name": "Remote Code Execution",
     "aliases": ["rce", "remote code execution"],
-    "description": "A vulnerability that allows attackers to execute arbitrary code on the server."
+    "description": "A vulnerability that allows attackers to execute arbitrary code on the server.",
+    "mitigation": "Validate inputs, patch vulnerable components, and isolate execution environments."
   },
   {
     "name": "Broken Access Control",
     "aliases": ["broken access control", "unauthorized access", "access control"],
-    "description": "A vulnerability that allows unauthorized users to access restricted resources."
+    "description": "A vulnerability that allows unauthorized users to access restricted resources.",
+    "mitigation": "Enforce server-side authorization checks and apply least privilege."
   }
 ]
