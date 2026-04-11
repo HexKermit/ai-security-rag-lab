@@ -1,14 +1,14 @@
 from sentence_transformers import SentenceTransformer, util
 
-
-model = SentenceTransformer("all-MiniLM-L6-v2")
+MODEL_NAME = "all-MiniLM-L6-v2"
+model = SentenceTransformer(MODEL_NAME)
 
 
 def build_search_text(vuln):
     return f"{vuln['name']} {' '.join(vuln['aliases'])} {vuln['description']}"
 
 
-def semantic_search(query, vulnerabilities, top_k=3):
+def semantic_scores(query, vulnerabilities):
     documents = [build_search_text(vuln) for vuln in vulnerabilities]
 
     doc_embeddings = model.encode(documents, convert_to_tensor=True)
@@ -16,9 +16,4 @@ def semantic_search(query, vulnerabilities, top_k=3):
 
     scores = util.cos_sim(query_embedding, doc_embeddings)[0]
 
-    scored_results = []
-    for i, score in enumerate(scores):
-        scored_results.append((float(score), vulnerabilities[i]))
-
-    scored_results.sort(reverse=True, key=lambda x: x[0])
-    return scored_results[:top_k]
+    return [float(score) for score in scores]

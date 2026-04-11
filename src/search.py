@@ -13,35 +13,29 @@ def token_overlap_score(query, text):
     text_tokens = set(normalize_text(text).split())
 
     if not query_tokens or not text_tokens:
-        return 0
+        return 0.0
 
     overlap = query_tokens.intersection(text_tokens)
     return len(overlap) / len(query_tokens)
 
 
-def search_vulnerabilities(query, vulnerabilities):
+def lexical_score(query, vuln):
     query = normalize_text(query)
-    results = []
 
-    for vuln in vulnerabilities:
-        name = vuln["name"]
-        aliases = vuln["aliases"]
-        description = vuln["description"]
+    name = vuln["name"]
+    aliases = [normalize_text(alias) for alias in vuln["aliases"]]
+    description = vuln["description"]
 
-        searchable_text = " ".join([name] + aliases + [description]).lower()
+    searchable_text = normalize_text(" ".join([name] + aliases + [description]))
 
-        score = 0
+    score = 0.0
 
-        if query in aliases:
-            score += 3
+    if query in aliases:
+        score += 3.0
 
-        if query in searchable_text:
-            score += 2
+    if query in searchable_text:
+        score += 2.0
 
-        score += token_overlap_score(query, searchable_text)
+    score += token_overlap_score(query, searchable_text)
 
-        if score > 0:
-            results.append((score, vuln))
-
-    results.sort(reverse=True, key=lambda x: x[0])
-    return results[:3]
+    return score
