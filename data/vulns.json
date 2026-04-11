@@ -1,44 +1,86 @@
 [
   {
     "name": "SQL Injection",
+    "type": "vulnerability",
     "aliases": ["sql injection", "sqli"],
     "description": "A vulnerability that allows attackers to interfere with database queries.",
     "mitigation": "Use parameterized queries, prepared statements, and input validation."
   },
   {
     "name": "Cross-Site Scripting",
+    "type": "vulnerability",
     "aliases": ["xss", "cross site scripting", "javascript injection"],
     "description": "A vulnerability that allows attackers to inject malicious JavaScript into web pages.",
     "mitigation": "Use output encoding, input validation, and Content Security Policy."
   },
   {
     "name": "Server-Side Request Forgery",
+    "type": "vulnerability",
     "aliases": ["ssrf", "server side request forgery"],
     "description": "A vulnerability where the server makes unintended requests on behalf of the attacker.",
     "mitigation": "Restrict outbound requests, validate destinations, and use allowlists."
   },
   {
     "name": "Remote Code Execution",
+    "type": "vulnerability",
     "aliases": ["rce", "remote code execution"],
     "description": "A vulnerability that allows attackers to execute arbitrary code on the server.",
     "mitigation": "Validate inputs, patch vulnerable components, and isolate execution environments."
   },
   {
     "name": "Broken Access Control",
+    "type": "vulnerability",
     "aliases": ["broken access control", "unauthorized access", "access control"],
     "description": "A vulnerability that allows unauthorized users to access restricted resources.",
     "mitigation": "Enforce server-side authorization checks and apply least privilege."
   },
   {
-  "name": "Prompt Injection",
-  "aliases": ["prompt injection", "llm prompt injection", "jailbreak prompt"],
-  "description": "A vulnerability where an attacker manipulates an AI model through crafted instructions to bypass intended behavior or safety controls.",
-  "mitigation": "Use input filtering, instruction separation, output validation, and defense-in-depth prompt design."
-},
-{
-  "name": "Indirect Prompt Injection",
-  "aliases": ["indirect prompt injection", "remote prompt injection", "retrieved prompt injection"],
-  "description": "A vulnerability where malicious instructions are hidden in external content that an AI system later consumes and follows.",
-  "mitigation": "Treat external content as untrusted, isolate instructions from data, and validate model actions before execution."
-}
+    "name": "Prompt Injection",
+    "type": "vulnerability",
+    "aliases": ["prompt injection", "llm prompt injection", "jailbreak prompt"],
+    "description": "A vulnerability where an attacker manipulates an AI model through crafted instructions to bypass intended behavior or safety controls.",
+    "mitigation": "Use input filtering, instruction separation, output validation, and defense-in-depth prompt design."
+  },
+  {
+    "name": "Indirect Prompt Injection",
+    "type": "vulnerability",
+    "aliases": ["indirect prompt injection", "remote prompt injection", "retrieved prompt injection"],
+    "description": "A vulnerability where malicious instructions are hidden in external content that an AI system later consumes and follows.",
+    "mitigation": "Treat external content as untrusted, isolate instructions from data, and validate model actions before execution."
+  },
+  {
+    "name": "Sensitive Information Disclosure",
+    "type": "vulnerability",
+    "aliases": ["data leakage", "information disclosure", "sensitive data exposure"],
+    "description": "A vulnerability where an AI system unintentionally reveals confidential or sensitive information in its responses.",
+    "mitigation": "Apply strict data filtering, limit training data exposure, and implement output validation and redaction mechanisms."
+  },
+  {
+    "name": "Insecure Output Handling",
+    "type": "vulnerability",
+    "aliases": ["unsafe output", "untrusted output execution", "output injection"],
+    "description": "A vulnerability where AI-generated outputs are used without validation, potentially leading to code execution or injection attacks.",
+    "mitigation": "Always treat model outputs as untrusted, validate before execution, and avoid directly passing outputs into sensitive systems."
+  },
+  {
+    "name": "Tool Misuse",
+    "type": "vulnerability",
+    "aliases": ["agent abuse", "tool abuse", "llm tool misuse"],
+    "description": "A vulnerability where an AI system misuses connected tools or APIs due to manipulated input or malicious instructions.",
+    "mitigation": "Implement strict permission controls, validate tool calls, and isolate high-risk operations."
+  },
+  {
+    "name": "Data Exfiltration via LLM",
+    "type": "vulnerability",
+    "aliases": ["llm data exfiltration", "model data leakage", "prompt data extraction"],
+    "description": "A vulnerability where attackers extract sensitive data from an AI system through crafted prompts or repeated queries.",
+    "mitigation": "Limit context exposure, implement rate limiting, and monitor unusual query patterns."
+  },
+  {
+    "name": "RAG Injection",
+    "type": "vulnerability",
+    "aliases": ["retrieval injection", "rag prompt injection", "context injection"],
+    "description": "A vulnerability where malicious content is injected into retrieved documents, influencing the AI system's response.",
+    "mitigation": "Validate retrieved content, separate instructions from data, and apply trust boundaries on external sources."
+  }
 ]
