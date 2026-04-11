@@ -46,6 +46,7 @@ def main():
             print(f"[DEBUG] Normalized input: {user_query}")
 
         results = search_once(user_query, vulnerabilities, doc_embeddings)
+
         top_score, top_vuln = results[0]
 
         print(generate_answer(user_query, top_vuln))
