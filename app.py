@@ -7,6 +7,9 @@ from src.answer_generator import generate_answer
 from src.context_builder import build_context
 from src.llm_client import generate_llm_answer
 
+STRONG_THRESHOLD = 4.0
+WEAK_THRESHOLD = 1.5
+
 
 # -----------------------------
 # Data loading
