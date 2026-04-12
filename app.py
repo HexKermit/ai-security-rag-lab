@@ -29,16 +29,47 @@ def search(query: str):
         aliases = [alias.lower() for alias in vuln.get("aliases", [])]
         name_lower = vuln["name"].lower()
 
-        # Exact / alias match override
-        if query_lower == name_lower or query_lower in aliases:
+        exact_match = query_lower == name_lower or query_lower in aliases
+
+        if exact_match:
             final_score = 100.0
         else:
             final_score = lex_score + sem_score
 
-        results.append((final_score, vuln))
+        results.append(
+            {
+                "final_score": final_score,
+                "lex_score": lex_score,
+                "sem_score": sem_score,
+                "exact_match": exact_match,
+                "vuln": vuln,
+            }
+        )
 
-    results.sort(key=lambda x: x[0], reverse=True)
+    results.sort(key=lambda x: x["final_score"], reverse=True)
     return results[:3]
+
+
+def build_confidence_explanation(top_result):
+    if top_result["exact_match"]:
+        return "Strong confidence because the query exactly matched the record name or one of its aliases."
+
+    lex_score = top_result["lex_score"]
+    sem_score = top_result["sem_score"]
+
+    reasons = []
+
+    if lex_score < 1.0:
+        reasons.append("weak lexical match")
+    else:
+        reasons.append("reasonable lexical match")
+
+    if sem_score < 0.8:
+        reasons.append("weak semantic similarity")
+    else:
+        reasons.append("reasonable semantic similarity")
+
+    return "Confidence explanation: " + ", ".join(reasons) + "."
 
 
 # -----------------------------
@@ -67,19 +98,25 @@ if query:
     if normalized_query:
         results = search(normalized_query)
 
-        top_score, top_vuln = results[0]
+        top_result = results[0]
+        top_score = top_result["final_score"]
+        top_vuln = top_result["vuln"]
 
         STRONG_THRESHOLD = 4.0
         WEAK_THRESHOLD = 1.5
 
         if top_score < WEAK_THRESHOLD:
             st.warning("No strong match found. Try a more specific query.")
+            st.caption(build_confidence_explanation(top_result))
             st.stop()
 
         elif top_score < STRONG_THRESHOLD:
             st.info("Did you mean:")
+            st.caption(build_confidence_explanation(top_result))
 
-            for score, vuln in results:
+            for result in results:
+                vuln = result["vuln"]
+                score = result["final_score"]
                 st.write(f"- **{vuln['name']}** ({score:.4f})")
 
             st.stop()
@@ -88,10 +125,13 @@ if query:
         st.markdown(f"```text\n{generate_answer(query, top_vuln)}\n```")
 
         st.metric("Confidence Score", f"{top_score:.4f}")
+        st.caption(build_confidence_explanation(top_result))
 
         if len(results) > 1:
             st.subheader("Other Matches")
-            for score, vuln in results[1:]:
+            for result in results[1:]:
+                vuln = result["vuln"]
+                score = result["final_score"]
                 st.write(f"- **{vuln['name']}** ({score:.4f})")
     else:
         st.warning("Please enter a valid query.")
