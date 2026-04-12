@@ -4,6 +4,8 @@ from src.loader import load_vulnerabilities
 from src.search import lexical_score, normalize_text
 from src.semantic_search import semantic_scores, prepare_documents
 from src.answer_generator import generate_answer
+from src.context_builder import build_context
+from src.llm_client import generate_llm_answer
 
 
 # -----------------------------
@@ -121,8 +123,12 @@ if query:
 
             st.stop()
 
+        fallback_answer = generate_answer(query, top_vuln)
+        context = build_context(query, top_result, results[1:])
+        final_answer = generate_llm_answer(context, fallback_answer)
+
         st.subheader("Best Match")
-        st.markdown(f"```text\n{generate_answer(query, top_vuln)}\n```")
+        st.markdown(f"```text\n{final_answer}\n```")
 
         st.metric("Confidence Score", f"{top_score:.4f}")
         st.caption(build_confidence_explanation(top_result))

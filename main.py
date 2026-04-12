@@ -2,6 +2,8 @@ from src.loader import load_vulnerabilities
 from src.search import lexical_score, normalize_text
 from src.semantic_search import semantic_scores, prepare_documents
 from src.answer_generator import generate_answer
+from src.context_builder import build_context
+from src.llm_client import generate_llm_answer
 
 STRONG_THRESHOLD = 4.0
 WEAK_THRESHOLD = 1.5
@@ -107,8 +109,12 @@ def main():
                 print(f"- {vuln['name']} ({score:.4f})")
             continue
 
+        fallback_answer = generate_answer(raw_query, top_vuln)
+        context = build_context(raw_query, top_result, results[1:])
+        final_answer = generate_llm_answer(context, fallback_answer)
+
         print("\n" + "=" * 50)
-        print(generate_answer(raw_query, top_vuln))
+        print(final_answer)
         print(f"\nConfidence Score: {top_score:.4f}")
         print(build_confidence_explanation(top_result))
 
