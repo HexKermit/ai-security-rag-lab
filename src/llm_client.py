@@ -1,25 +1,85 @@
 import os
+from typing import Optional
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-def llm_enabled():
+def llm_enabled() -> bool:
     return os.getenv("USE_LLM", "false").lower() == "true"
 
 
-def generate_llm_answer(context, fallback_answer):
-    """
-    Safe wrapper:
-    - If USE_LLM is false, return fallback answer
-    - If USE_LLM is true later, this function becomes the integration point
-    """
+def get_provider_config() -> dict:
+    return {
+        "provider": "openai",
+        "api_key": os.getenv("OPENAI_API_KEY", "").strip(),
+        "model": os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip(),
+    }
+
+
+def build_system_prompt() -> str:
+    return (
+        "You are an AI security assistant. "
+        "Use only the provided context. "
+        "Do not invent facts, vulnerabilities, mitigations, or claims. "
+        "If the context is insufficient, say so clearly. "
+        "Do not claim external knowledge. "
+        "Keep answers practical, concise, and security-focused."
+    )
+
+
+def call_openai_chat(context: str) -> Optional[str]:
+    config = get_provider_config()
+    api_key = config["api_key"]
+    model = config["model"]
+
+    if not api_key:
+        return None
+
+    try:
+        from openai import OpenAI
+    except Exception:
+        return None
+
+    try:
+        client = OpenAI(api_key=api_key)
+
+        response = client.responses.create(
+            model=model,
+            input=[
+                {
+                    "role": "system",
+                    "content": build_system_prompt(),
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        "Answer the user's query using only this structured context.\n\n"
+                        f"{context}"
+                    ),
+                },
+            ],
+        )
+
+        if hasattr(response, "output_text") and response.output_text:
+            return response.output_text.strip()
+
+        return None
+    except Exception:
+        return None
+
+
+def generate_llm_answer(context: str, fallback_answer: str) -> str:
     if not llm_enabled():
         return fallback_answer
 
-    # Placeholder for future provider integration
-    # We intentionally keep this controlled for now.
+    answer = call_openai_chat(context)
+
+    if answer:
+        return answer
+
     return (
-        "LLM mode is enabled, but no provider integration is configured yet.\n\n"
-        "Fallback answer:\n\n"
-        f"{fallback_answer}\n\n"
-        "Context passed to future LLM layer:\n"
-        f"{context}"
+        fallback_answer
+        + "\n\n[Note] LLM mode is enabled, but the provider is unavailable or not configured correctly."
     )

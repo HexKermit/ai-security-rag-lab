@@ -117,6 +117,7 @@ def main():
         print(final_answer)
         print(f"\nConfidence Score: {top_score:.4f}")
         print(build_confidence_explanation(top_result))
+        print("Source: Internal AI Security Knowledge Base")
 
         if len(results) > 1:
             print("\nOther Matches:")

@@ -104,9 +104,6 @@ if query:
         top_score = top_result["final_score"]
         top_vuln = top_result["vuln"]
 
-        STRONG_THRESHOLD = 4.0
-        WEAK_THRESHOLD = 1.5
-
         if top_score < WEAK_THRESHOLD:
             st.warning("No strong match found. Try a more specific query.")
             st.caption(build_confidence_explanation(top_result))

@@ -138,5 +138,12 @@
     "aliases": ["owasp top 10", "owasp top ten", "top web risks"],
     "description": "A widely used awareness document that highlights the most important categories of web application security risks.",
     "mitigation": "Use it as a framework for prioritizing security design, testing, and remediation efforts."
-  }
+  },
+  {
+  "name": "Web Cache Deception",
+  "type": "attack",
+  "aliases": ["web cache deception", "cache deception", "cache tricking"],
+  "description": "An attack that tricks caching systems into storing and serving sensitive dynamic content as if it were public static content.",
+  "mitigation": "Use correct cache-control headers, separate static and dynamic routes, and prevent sensitive responses from being cached."
+}
 ]
