@@ -3,59 +3,82 @@ from src.search import lexical_score, normalize_text
 from src.semantic_search import semantic_scores, prepare_documents
 from src.answer_generator import generate_answer
 
-DEBUG = False
+STRONG_THRESHOLD = 4.0
+WEAK_THRESHOLD = 1.5
 
 
-def search_once(user_query, vulnerabilities, doc_embeddings):
-    semantic = semantic_scores(user_query, doc_embeddings)
+def search(query, vulnerabilities, doc_embeddings):
+    semantic = semantic_scores(query, doc_embeddings)
+    query_lower = query.lower()
 
-    combined_results = []
+    results = []
+
     for i, vuln in enumerate(vulnerabilities):
-        lex_score = lexical_score(user_query, vuln)
+        lex_score = lexical_score(query, vuln)
         sem_score = semantic[i]
-        final_score = lex_score + sem_score
-        combined_results.append((final_score, vuln))
 
-    combined_results.sort(key=lambda x: x[0], reverse=True)
-    return combined_results[:3]
+        aliases = [a.lower() for a in vuln.get("aliases", [])]
+        name_lower = vuln["name"].lower()
+
+        # Exact match override
+        if query_lower == name_lower or query_lower in aliases:
+            final_score = 100.0
+        else:
+            final_score = lex_score + sem_score
+
+        results.append((final_score, vuln))
+
+    results.sort(key=lambda x: x[0], reverse=True)
+    return results[:3]
 
 
 def main():
     file_path = "data/vulns.json"
     vulnerabilities = load_vulnerabilities(file_path)
+
+    print("Loading embeddings...")
     _, doc_embeddings = prepare_documents(vulnerabilities)
 
-    print("AI Security RAG Lab")
+    print("\nAI Security RAG Lab")
     print("Type a query or 'exit' to quit.")
 
     while True:
-        raw_query = input("\nSearch vulnerability: ").strip()
+        raw_query = input("\nSearch: ").strip()
 
         if raw_query.lower() == "exit":
             print("Goodbye.")
             break
 
-        user_query = normalize_text(raw_query)
+        query = normalize_text(raw_query)
 
-        if not user_query:
+        if not query:
             print("Please enter a valid query.")
             continue
 
-        if DEBUG:
-            print(f"[DEBUG] Raw input: {raw_query}")
-            print(f"[DEBUG] Normalized input: {user_query}")
-
-        results = search_once(user_query, vulnerabilities, doc_embeddings)
-
+        results = search(query, vulnerabilities, doc_embeddings)
         top_score, top_vuln = results[0]
 
-        print(generate_answer(user_query, top_vuln))
+        if top_score < WEAK_THRESHOLD:
+            print("\n[!] No strong match found.")
+            print("Try a more specific query.\n")
+            continue
+
+        elif top_score < STRONG_THRESHOLD:
+            print("\n[?] Did you mean:")
+            for score, vuln in results:
+                print(f"- {vuln['name']} ({score:.4f})")
+            continue
+
+        print("\n" + "=" * 50)
+        print(generate_answer(raw_query, top_vuln))
         print(f"\nConfidence Score: {top_score:.4f}")
 
         if len(results) > 1:
-            print("\nOther Possible Matches:")
+            print("\nOther Matches:")
             for score, vuln in results[1:]:
                 print(f"- {vuln['name']} ({score:.4f})")
+
+        print("=" * 50)
 
 
 if __name__ == "__main__":
