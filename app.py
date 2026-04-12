@@ -134,7 +134,20 @@ if query:
         st.metric("Confidence Score", f"{top_score:.4f}")
         st.caption(build_confidence_explanation(top_result))
 
+        st.subheader("Matched Record")
+        st.write(f"**Name:** {top_vuln['name']}")
+        st.write(f"**Type:** {top_vuln.get('type', 'unknown')}")
+        st.write(f"**Score:** {top_score:.4f}")
+
         if len(results) > 1:
+            st.subheader("Related Matches Used")
+            for result in results[1:]:
+                vuln = result["vuln"]
+                score = result["final_score"]
+                st.write(
+                    f"- **{vuln['name']}** | type={vuln.get('type', 'unknown')} | score={score:.4f}"
+                )
+
             st.subheader("Other Matches")
             for result in results[1:]:
                 vuln = result["vuln"]

@@ -65,6 +65,23 @@ def build_confidence_explanation(top_result):
     return "Confidence explanation: " + ", ".join(reasons) + "."
 
 
+def print_match_metadata(top_result, related_results):
+    top_vuln = top_result["vuln"]
+
+    print("\nMatched Record:")
+    print(f"- Name: {top_vuln['name']}")
+    print(f"- Type: {top_vuln.get('type', 'unknown')}")
+    print(f"- Score: {top_result['final_score']:.4f}")
+
+    if related_results:
+        print("\nRelated Matches Used:")
+        for result in related_results:
+            vuln = result["vuln"]
+            print(
+                f"- {vuln['name']} | type={vuln.get('type', 'unknown')} | score={result['final_score']:.4f}"
+            )
+
+
 def main():
     file_path = "data/vulns.json"
     vulnerabilities = load_vulnerabilities(file_path)
@@ -118,6 +135,7 @@ def main():
         print(f"\nConfidence Score: {top_score:.4f}")
         print(build_confidence_explanation(top_result))
         print("Source: Internal AI Security Knowledge Base")
+        print_match_metadata(top_result, results[1:])
 
         if len(results) > 1:
             print("\nOther Matches:")
