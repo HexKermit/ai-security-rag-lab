@@ -46,5 +46,8 @@ def generate_answer(query, top_result):
     answer.append("")
     answer.append("Basic mitigation / handling:")
     answer.append(mitigation)
+    answer.append("")
+    answer.append("Source:")
+    answer.append("This answer is based on the internal structured security knowledge dataset.")
 
     return "\n".join(answer)

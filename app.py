@@ -128,6 +128,7 @@ if query:
         final_answer = generate_llm_answer(context, fallback_answer)
 
         st.subheader("Best Match")
+        st.caption("Source: Internal AI Security Knowledge Base")
         st.markdown(f"```text\n{final_answer}\n```")
 
         st.metric("Confidence Score", f"{top_score:.4f}")
